@@ -7,8 +7,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lumos App",
-  description: "Built with create-lumos-app",
+  title: "UniteFencers",
+  description: "One platform to train, track, and compete in fencing.",
 };
 
 export default function RootLayout({

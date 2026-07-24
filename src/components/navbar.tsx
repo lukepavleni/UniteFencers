@@ -13,21 +13,22 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b border-border bg-background">
-      <div className="mx-auto flex h-14 max-w-3xl items-center gap-6 px-4">
-        <Link href="/" className="font-semibold tracking-tight">
-          Lumos App
+    <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-6">
+        <Link
+          href="/"
+          className="text-sm font-black uppercase tracking-tighter text-zinc-50"
+        >
+          Unite<span className="text-brand">Fencers</span>
         </Link>
-        <div className="flex gap-4">
+        <div className="flex gap-6">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm transition-colors hover:text-foreground",
-                pathname === link.href
-                  ? "text-foreground"
-                  : "text-muted-foreground",
+                "text-sm font-medium transition-colors hover:text-zinc-50",
+                pathname === link.href ? "text-zinc-50" : "text-zinc-500",
               )}
             >
               {link.label}
