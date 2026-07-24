@@ -24,6 +24,10 @@
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
+
+  /* Brand accent — electric lime, used for premium marketing surfaces */
+  --color-brand: oklch(0.87 0.24 142);
+  --color-brand-foreground: oklch(0.145 0 0);
 }
 
 .dark {
