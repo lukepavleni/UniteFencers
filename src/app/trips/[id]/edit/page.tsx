@@ -24,7 +24,7 @@ export default async function EditTripPage({
   const { data: trip } = await supabase
     .from("trips")
     .select(
-      "id, nac_name, city, venue, arrival_date, departure_date, available_start_date, available_end_date",
+      "id, nac_name, city, venue, arrival_date, departure_date, available_dates",
     )
     .eq("id", id)
     .eq("user_id", user.id)
@@ -51,8 +51,7 @@ export default async function EditTripPage({
           nacName: trip.nac_name,
           arrivalDate: trip.arrival_date,
           departureDate: trip.departure_date,
-          availableStartDate: trip.available_start_date,
-          availableEndDate: trip.available_end_date,
+          availableDates: trip.available_dates,
         }}
       />
     </main>

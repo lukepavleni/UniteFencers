@@ -8,7 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { formatDate, type Trip, type VolunteerPlan } from "~/lib/trips";
+import {
+  formatDate,
+  getDatesInRange,
+  type Trip,
+  type VolunteerPlan,
+} from "~/lib/trips";
 
 export function TripCard({
   trip,
@@ -17,6 +22,11 @@ export function TripCard({
   trip: Trip;
   plans: VolunteerPlan[];
 }) {
+  const rangeDates = getDatesInRange(trip.arrival_date, trip.departure_date);
+  const knockoutDates = rangeDates.filter(
+    (date) => !trip.available_dates.includes(date),
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -41,9 +51,20 @@ export function TripCard({
         <div className="text-sm">
           <p className="text-muted-foreground">Available to volunteer</p>
           <p className="font-medium">
-            {formatDate(trip.available_start_date)} –{" "}
-            {formatDate(trip.available_end_date)}
+            {trip.available_dates.length > 0
+              ? trip.available_dates
+                  .slice()
+                  .sort()
+                  .map((date) => formatDate(date))
+                  .join(", ")
+              : "None"}
           </p>
+          {knockoutDates.length > 0 && (
+            <p className="text-muted-foreground">
+              Knockout:{" "}
+              {knockoutDates.map((date) => formatDate(date)).join(", ")}
+            </p>
+          )}
         </div>
 
         <div className="flex gap-2">

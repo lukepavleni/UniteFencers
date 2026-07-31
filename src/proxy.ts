@@ -27,7 +27,28 @@ export async function proxy(request: NextRequest) {
   );
 
   // Refresh the auth token
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+  const isOnboardingExempt = ["/onboarding", "/login", "/signup", "/auth"].some(
+    (path) => pathname.startsWith(path),
+  );
+
+  if (
+    user &&
+    user.user_metadata?.onboarding_complete !== true &&
+    !isOnboardingExempt
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/onboarding";
+    const redirectResponse = NextResponse.redirect(url);
+    for (const cookie of response.cookies.getAll()) {
+      redirectResponse.cookies.set(cookie);
+    }
+    return redirectResponse;
+  }
 
   return response;
 }

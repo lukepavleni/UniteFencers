@@ -9,8 +9,7 @@ interface TripInput {
   nacName: string;
   arrivalDate: string;
   departureDate: string;
-  availableStartDate: string;
-  availableEndDate: string;
+  availableDates: string[];
 }
 
 function parseTripInput(formData: FormData): TripInput {
@@ -18,8 +17,7 @@ function parseTripInput(formData: FormData): TripInput {
     nacName: formData.get("nacName") as string,
     arrivalDate: formData.get("arrivalDate") as string,
     departureDate: formData.get("departureDate") as string,
-    availableStartDate: formData.get("availableStartDate") as string,
-    availableEndDate: formData.get("availableEndDate") as string,
+    availableDates: formData.getAll("availableDates") as string[],
   };
 }
 
@@ -29,28 +27,23 @@ function validateTripInput(input: TripInput): string | null {
     return "Please select a valid NAC.";
   }
 
-  if (
-    !input.arrivalDate ||
-    !input.departureDate ||
-    !input.availableStartDate ||
-    !input.availableEndDate
-  ) {
-    return "Please fill in all dates.";
+  if (!input.arrivalDate || !input.departureDate) {
+    return "Please fill in your arrival and departure dates.";
   }
 
   if (input.departureDate < input.arrivalDate) {
     return "Departure date must be on or after the arrival date.";
   }
 
-  if (input.availableEndDate < input.availableStartDate) {
-    return "The 'available to volunteer' end date must be on or after the start date.";
+  if (input.availableDates.length === 0) {
+    return "Select at least one day you're available to volunteer.";
   }
 
-  if (
-    input.availableStartDate < input.arrivalDate ||
-    input.availableEndDate > input.departureDate
-  ) {
-    return "Your available-to-volunteer dates must fall within your arrival and departure dates.";
+  const outOfRange = input.availableDates.some(
+    (date) => date < input.arrivalDate || date > input.departureDate,
+  );
+  if (outOfRange) {
+    return "Your available dates must fall within your arrival and departure dates.";
   }
 
   return null;
@@ -86,8 +79,7 @@ export async function createTrip(formData: FormData) {
     venue: nac.venue,
     arrival_date: input.arrivalDate,
     departure_date: input.departureDate,
-    available_start_date: input.availableStartDate,
-    available_end_date: input.availableEndDate,
+    available_dates: input.availableDates,
   });
 
   if (error) {
@@ -132,8 +124,7 @@ export async function updateTrip(tripId: string, formData: FormData) {
       venue: nac.venue,
       arrival_date: input.arrivalDate,
       departure_date: input.departureDate,
-      available_start_date: input.availableStartDate,
-      available_end_date: input.availableEndDate,
+      available_dates: input.availableDates,
     })
     .eq("id", tripId)
     .eq("user_id", user.id);

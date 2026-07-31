@@ -5,8 +5,7 @@ export interface Trip {
   venue: string;
   arrival_date: string;
   departure_date: string;
-  available_start_date: string;
-  available_end_date: string;
+  available_dates: string[];
 }
 
 export type VolunteerPlanStatus =
@@ -38,4 +37,19 @@ export function formatDate(dateStr: string): string {
 export function todayDateString(): string {
   const now = new Date();
   return now.toISOString().slice(0, 10);
+}
+
+export function getDatesInRange(start: string, end: string): string[] {
+  if (!start || !end || end < start) return [];
+
+  const dates: string[] = [];
+  let current = new Date(`${start}T00:00:00`);
+  const last = new Date(`${end}T00:00:00`);
+
+  while (current <= last) {
+    dates.push(current.toISOString().slice(0, 10));
+    current = new Date(current.getTime() + 24 * 60 * 60 * 1000);
+  }
+
+  return dates;
 }

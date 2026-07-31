@@ -8,7 +8,7 @@ export async function getTripsWithPlans(
   const { data: trips } = await supabase
     .from("trips")
     .select(
-      "id, nac_name, city, venue, arrival_date, departure_date, available_start_date, available_end_date",
+      "id, nac_name, city, venue, arrival_date, departure_date, available_dates",
     )
     .eq("user_id", userId)
     .order("arrival_date", { ascending: true });
