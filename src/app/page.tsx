@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { Dashboard } from "~/components/dashboard";
 import { Button } from "~/components/ui/button";
-import { createClient } from "~/lib/supabase/server";
+import { getCurrentUser } from "~/lib/auth";
 
 const steps = [
   {
@@ -76,10 +76,7 @@ const audiences = [
 ];
 
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (user) {
     return <Dashboard userId={user.id} />;

@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
 import { TripForm } from "~/components/trip-form";
-import { createClient } from "~/lib/supabase/server";
+import { requireUser } from "~/lib/auth";
 import { createTrip } from "../actions";
 
 export default async function NewTripPage({
@@ -9,14 +8,7 @@ export default async function NewTripPage({
   searchParams: Promise<{ message?: string }>;
 }) {
   const { message } = await searchParams;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  await requireUser();
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-2xl flex-col gap-8 px-4 py-12">

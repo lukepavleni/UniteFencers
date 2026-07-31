@@ -1,12 +1,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { requireUser } from "~/lib/auth";
+import { redirectWithMessage } from "~/lib/redirect-with-message";
 import { createClient } from "~/lib/supabase/server";
-import { findNacByName } from "./nacs";
+import { findNacByName, type NacOption } from "./nacs";
 
 interface TripInput {
   nacName: string;
+  arrivalDate: string;
+  departureDate: string;
+  availableDates: string[];
+}
+
+interface ValidatedTripInput {
+  nac: NacOption;
   arrivalDate: string;
   departureDate: string;
   availableDates: string[];
@@ -21,121 +29,106 @@ function parseTripInput(formData: FormData): TripInput {
   };
 }
 
-function validateTripInput(input: TripInput): string | null {
+function validateTripInput(
+  input: TripInput,
+): { error: string } | { error: null; data: ValidatedTripInput } {
   const nac = findNacByName(input.nacName);
   if (!nac) {
-    return "Please select a valid NAC.";
+    return { error: "Please select a valid NAC." };
   }
 
   if (!input.arrivalDate || !input.departureDate) {
-    return "Please fill in your arrival and departure dates.";
+    return { error: "Please fill in your arrival and departure dates." };
   }
 
   if (input.departureDate < input.arrivalDate) {
-    return "Departure date must be on or after the arrival date.";
+    return { error: "Departure date must be on or after the arrival date." };
   }
 
   if (input.availableDates.length === 0) {
-    return "Select at least one day you're available to volunteer.";
+    return {
+      error: "Select at least one day you're available to volunteer.",
+    };
   }
 
   const outOfRange = input.availableDates.some(
     (date) => date < input.arrivalDate || date > input.departureDate,
   );
   if (outOfRange) {
-    return "Your available dates must fall within your arrival and departure dates.";
+    return {
+      error:
+        "Your available dates must fall within your arrival and departure dates.",
+    };
   }
 
-  return null;
+  return {
+    error: null,
+    data: {
+      nac,
+      arrivalDate: input.arrivalDate,
+      departureDate: input.departureDate,
+      availableDates: input.availableDates,
+    },
+  };
 }
 
 export async function createTrip(formData: FormData) {
+  const user = await requireUser();
+
+  const validated = validateTripInput(parseTripInput(formData));
+  if (validated.error !== null) {
+    redirectWithMessage("/trips/new", validated.error);
+  }
+
+  const { nac, arrivalDate, departureDate, availableDates } = validated.data;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const input = parseTripInput(formData);
-  const validationError = validateTripInput(input);
-  if (validationError) {
-    redirect(`/trips/new?message=${encodeURIComponent(validationError)}`);
-  }
-
-  const nac = findNacByName(input.nacName);
-  if (!nac) {
-    redirect(
-      `/trips/new?message=${encodeURIComponent("Please select a valid NAC.")}`,
-    );
-  }
-
   const { error } = await supabase.from("trips").insert({
     user_id: user.id,
     nac_name: nac.name,
     city: nac.city,
     venue: nac.venue,
-    arrival_date: input.arrivalDate,
-    departure_date: input.departureDate,
-    available_dates: input.availableDates,
+    arrival_date: arrivalDate,
+    departure_date: departureDate,
+    available_dates: availableDates,
   });
 
   if (error) {
-    redirect(`/trips/new?message=${encodeURIComponent(error.message)}`);
+    redirectWithMessage("/trips/new", error.message);
   }
 
   revalidatePath("/");
   revalidatePath("/trips");
-  redirect(`/trips?message=${encodeURIComponent("Trip saved.")}`);
+  redirectWithMessage("/trips", "Trip saved.");
 }
 
 export async function updateTrip(tripId: string, formData: FormData) {
+  const user = await requireUser();
+
+  const validated = validateTripInput(parseTripInput(formData));
+  if (validated.error !== null) {
+    redirectWithMessage(`/trips/${tripId}/edit`, validated.error);
+  }
+
+  const { nac, arrivalDate, departureDate, availableDates } = validated.data;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const input = parseTripInput(formData);
-  const validationError = validateTripInput(input);
-  if (validationError) {
-    redirect(
-      `/trips/${tripId}/edit?message=${encodeURIComponent(validationError)}`,
-    );
-  }
-
-  const nac = findNacByName(input.nacName);
-  if (!nac) {
-    redirect(
-      `/trips/${tripId}/edit?message=${encodeURIComponent("Please select a valid NAC.")}`,
-    );
-  }
-
   const { error } = await supabase
     .from("trips")
     .update({
       nac_name: nac.name,
       city: nac.city,
       venue: nac.venue,
-      arrival_date: input.arrivalDate,
-      departure_date: input.departureDate,
-      available_dates: input.availableDates,
+      arrival_date: arrivalDate,
+      departure_date: departureDate,
+      available_dates: availableDates,
     })
     .eq("id", tripId)
     .eq("user_id", user.id);
 
   if (error) {
-    redirect(
-      `/trips/${tripId}/edit?message=${encodeURIComponent(error.message)}`,
-    );
+    redirectWithMessage(`/trips/${tripId}/edit`, error.message);
   }
 
   revalidatePath("/");
   revalidatePath("/trips");
-  redirect(`/trips?message=${encodeURIComponent("Trip updated.")}`);
+  redirectWithMessage("/trips", "Trip updated.");
 }

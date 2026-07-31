@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { StatusBadge } from "~/components/status-badge";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { VolunteerPlanListItem } from "~/components/volunteer-plan-list-item";
 import {
   formatDate,
   getDatesInRange,
@@ -83,25 +83,7 @@ export function TripCard({
           {plans.length > 0 ? (
             <ul className="flex flex-col gap-2">
               {plans.map((plan) => (
-                <li
-                  key={plan.id}
-                  className="flex flex-col gap-2 rounded-md border border-border p-3 text-sm sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="font-medium">{plan.opportunity_name}</p>
-                    <p className="text-muted-foreground">{plan.organization}</p>
-                    <p className="text-muted-foreground">
-                      {formatDate(plan.opportunity_date)}
-                      {plan.opportunity_time
-                        ? ` · ${plan.opportunity_time}`
-                        : ""}
-                      {plan.distance_from_tournament
-                        ? ` · ${plan.distance_from_tournament}`
-                        : ""}
-                    </p>
-                  </div>
-                  <StatusBadge status={plan.status} />
-                </li>
+                <VolunteerPlanListItem key={plan.id} plan={plan} />
               ))}
             </ul>
           ) : (

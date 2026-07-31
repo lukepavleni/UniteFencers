@@ -2,7 +2,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { isAdmin } from "~/lib/admin";
+import { getCurrentUser } from "~/lib/auth";
 import { createClient } from "~/lib/supabase/server";
+
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/trips", label: "My Trips" },
+  { href: "/service-hours", label: "Service Hours" },
+  { href: "/profile", label: "Profile" },
+];
 
 async function signOut() {
   "use server";
@@ -13,10 +21,7 @@ async function signOut() {
 }
 
 export async function Navbar() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   return (
     <nav className="border-b border-border bg-background">
@@ -27,18 +32,11 @@ export async function Navbar() {
 
         {user ? (
           <div className="flex flex-wrap items-center gap-1">
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/">Home</Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/trips">My Trips</Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/service-hours">Service Hours</Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/profile">Profile</Link>
-            </Button>
+            {NAV_LINKS.map((link) => (
+              <Button key={link.href} asChild variant="ghost" size="sm">
+                <Link href={link.href}>{link.label}</Link>
+              </Button>
+            ))}
             {isAdmin(user) && (
               <Button asChild variant="ghost" size="sm">
                 <Link href="/admin">Admin</Link>

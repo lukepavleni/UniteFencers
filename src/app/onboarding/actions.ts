@@ -2,25 +2,21 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireUser } from "~/lib/auth";
 import { parseProfileInput, validateProfileInput } from "~/lib/profile";
+import { redirectWithMessage } from "~/lib/redirect-with-message";
 import { createClient } from "~/lib/supabase/server";
 
 export async function completeOnboarding(formData: FormData) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  const user = await requireUser();
 
   const input = parseProfileInput(formData);
   const validationError = validateProfileInput(input);
   if (validationError) {
-    redirect(`/onboarding?message=${encodeURIComponent(validationError)}`);
+    redirectWithMessage("/onboarding", validationError);
   }
 
+  const supabase = await createClient();
   const { error } = await supabase.from("profiles").upsert(
     {
       id: user.id,
@@ -32,7 +28,7 @@ export async function completeOnboarding(formData: FormData) {
   );
 
   if (error) {
-    redirect(`/onboarding?message=${encodeURIComponent(error.message)}`);
+    redirectWithMessage("/onboarding", error.message);
   }
 
   const { error: updateUserError } = await supabase.auth.updateUser({
@@ -40,9 +36,7 @@ export async function completeOnboarding(formData: FormData) {
   });
 
   if (updateUserError) {
-    redirect(
-      `/onboarding?message=${encodeURIComponent(updateUserError.message)}`,
-    );
+    redirectWithMessage("/onboarding", updateUserError.message);
   }
 
   revalidatePath("/", "layout");

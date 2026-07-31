@@ -26,6 +26,9 @@ export interface VolunteerPlan {
   status: VolunteerPlanStatus;
 }
 
+export const VOLUNTEER_PLAN_COLUMNS =
+  "id, trip_id, opportunity_name, organization, opportunity_date, opportunity_time, distance_from_tournament, hours, status";
+
 export function formatDate(dateStr: string): string {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString("en-US", {
     month: "short",

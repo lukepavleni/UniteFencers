@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { TripForm } from "~/components/trip-form";
+import { requireUser } from "~/lib/auth";
 import { createClient } from "~/lib/supabase/server";
 import { updateTrip } from "../../actions";
 
@@ -12,14 +13,8 @@ export default async function EditTripPage({
 }) {
   const { id } = await params;
   const { message } = await searchParams;
+  const user = await requireUser();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
 
   const { data: trip } = await supabase
     .from("trips")

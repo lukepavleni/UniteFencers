@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { redirectWithMessage } from "~/lib/redirect-with-message";
 import { createClient } from "~/lib/supabase/server";
 
 export async function signup(formData: FormData) {
@@ -21,7 +22,7 @@ export async function signup(formData: FormData) {
   });
 
   if (error) {
-    redirect(`/signup?message=${encodeURIComponent(error.message)}`);
+    redirectWithMessage("/signup", error.message);
   }
 
   if (data.session) {
@@ -29,5 +30,5 @@ export async function signup(formData: FormData) {
     redirect("/");
   }
 
-  redirect("/signup?message=Check your email to confirm your account.");
+  redirectWithMessage("/signup", "Check your email to confirm your account.");
 }

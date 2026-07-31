@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { TripCard } from "~/components/trip-card";
 import { Button } from "~/components/ui/button";
+import { requireUser } from "~/lib/auth";
 import { getTripsWithPlans } from "~/lib/get-trips-with-plans";
 import { createClient } from "~/lib/supabase/server";
 
@@ -11,14 +11,8 @@ export default async function TripsPage({
   searchParams: Promise<{ message?: string }>;
 }) {
   const { message } = await searchParams;
+  const user = await requireUser();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
 
   const { trips, plansByTripId } = await getTripsWithPlans(supabase, user.id);
 

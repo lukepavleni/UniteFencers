@@ -1,24 +1,16 @@
-import { redirect } from "next/navigation";
 import { ServiceHoursSummary } from "~/components/service-hours-summary";
-import { StatusBadge } from "~/components/status-badge";
+import { VolunteerPlanListItem } from "~/components/volunteer-plan-list-item";
+import { requireUser } from "~/lib/auth";
 import { createClient } from "~/lib/supabase/server";
-import { formatDate, type VolunteerPlan } from "~/lib/trips";
+import { VOLUNTEER_PLAN_COLUMNS, type VolunteerPlan } from "~/lib/trips";
 
 export default async function ServiceHoursPage() {
+  const user = await requireUser();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
 
   const { data: plans } = await supabase
     .from("volunteer_plans")
-    .select(
-      "id, trip_id, opportunity_name, organization, opportunity_date, opportunity_time, distance_from_tournament, hours, status",
-    )
+    .select(VOLUNTEER_PLAN_COLUMNS)
     .eq("user_id", user.id)
     .order("opportunity_date", { ascending: true });
 
@@ -40,20 +32,11 @@ export default async function ServiceHoursPage() {
           <h2 className="text-lg font-semibold">All Activities</h2>
           <ul className="flex flex-col gap-2">
             {planList.map((plan) => (
-              <li
+              <VolunteerPlanListItem
                 key={plan.id}
-                className="flex flex-col gap-2 rounded-md border border-border p-3 text-sm sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div>
-                  <p className="font-medium">{plan.opportunity_name}</p>
-                  <p className="text-muted-foreground">{plan.organization}</p>
-                  <p className="text-muted-foreground">
-                    {formatDate(plan.opportunity_date)}
-                    {plan.opportunity_time ? ` · ${plan.opportunity_time}` : ""}
-                  </p>
-                </div>
-                <StatusBadge status={plan.status} />
-              </li>
+                plan={plan}
+                showDistance={false}
+              />
             ))}
           </ul>
         </div>
