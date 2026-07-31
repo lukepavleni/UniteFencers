@@ -1,40 +1,65 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "~/lib/utils";
+import { redirect } from "next/navigation";
+import { Button } from "~/components/ui/button";
+import { isAdmin } from "~/lib/admin";
+import { createClient } from "~/lib/supabase/server";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/notes", label: "Notes" },
-];
+async function signOut() {
+  "use server";
 
-export function Navbar() {
-  const pathname = usePathname();
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/");
+}
+
+export async function Navbar() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-6">
-        <Link
-          href="/"
-          className="text-sm font-black uppercase tracking-tighter text-zinc-50"
-        >
-          Unite<span className="text-brand">Fencers</span>
+    <nav className="border-b border-border bg-background">
+      <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2 sm:px-6 lg:px-8">
+        <Link href="/" className="shrink-0 text-lg font-bold tracking-tight">
+          UniteFencers
         </Link>
-        <div className="flex gap-6">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-zinc-50",
-                pathname === link.href ? "text-zinc-50" : "text-zinc-500",
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
+
+        {user ? (
+          <div className="flex flex-wrap items-center gap-1">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/">Home</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/trips">My Trips</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/service-hours">Service Hours</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/profile">Profile</Link>
+            </Button>
+            {isAdmin(user) && (
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/admin">Admin</Link>
+              </Button>
+            )}
+            <form action={signOut}>
+              <Button type="submit" variant="outline" size="sm">
+                Sign Out
+              </Button>
+            </form>
+          </div>
+        ) : (
+          <div className="flex shrink-0 items-center gap-2">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/login">Sign In</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/signup">Get Started</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </nav>
   );
