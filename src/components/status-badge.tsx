@@ -6,6 +6,7 @@ const STATUS_LABELS: Record<VolunteerPlanStatus, string> = {
   registered: "Registered",
   completed: "Completed",
   verified: "Verified",
+  missed: "Not Completed",
 };
 
 export function StatusBadge({ status }: { status: VolunteerPlanStatus }) {
@@ -23,6 +24,10 @@ export function StatusBadge({ status }: { status: VolunteerPlanStatus }) {
 
   if (status === "completed") {
     return <Badge variant="outline">{STATUS_LABELS[status]}</Badge>;
+  }
+
+  if (status === "missed") {
+    return <Badge variant="destructive">{STATUS_LABELS[status]}</Badge>;
   }
 
   return <Badge variant="secondary">{STATUS_LABELS[status]}</Badge>;

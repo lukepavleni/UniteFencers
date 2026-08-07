@@ -61,6 +61,15 @@ export function MobileNav({ user, isAdmin, signOutAction }: MobileNavProps) {
                 </Link>
               );
             })}
+            <a href="mailto:unitefencers@gmail.com">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
+              >
+                Help
+              </Button>
+            </a>
             {isAdmin && (
               <Link href="/admin" onClick={() => setIsOpen(false)}>
                 <Button

@@ -5,9 +5,9 @@ import { createTrip } from "../actions";
 export default async function NewTripPage({
   searchParams,
 }: {
-  searchParams: Promise<{ message?: string }>;
+  searchParams: Promise<{ message?: string; nac?: string }>;
 }) {
-  const { message } = await searchParams;
+  const { message, nac } = await searchParams;
   await requireUser();
 
   return (
@@ -22,7 +22,12 @@ export default async function NewTripPage({
         </p>
       </div>
 
-      <TripForm action={createTrip} submitLabel="Save Trip" message={message} />
+      <TripForm
+        action={createTrip}
+        submitLabel="Save Trip"
+        message={message}
+        defaultValues={nac ? { nacName: nac } : undefined}
+      />
     </main>
   );
 }

@@ -25,7 +25,8 @@ export async function Navbar() {
       <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-x-4 px-4 py-2 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link href="/" className="shrink-0 text-lg font-bold tracking-tight">
-            UniteFencers
+            <span className="text-navy">Unite</span>
+            <span className="text-brand">Fencers</span>
           </Link>
           {user && <NavLinks />}
         </div>

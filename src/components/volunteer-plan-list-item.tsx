@@ -1,18 +1,28 @@
 import { removeVolunteerPlan } from "~/app/trips/actions";
+import { EditHoursButton } from "~/components/edit-hours-button";
+import { LogHoursButton } from "~/components/log-hours-button";
 import { StatusBadge } from "~/components/status-badge";
 import { Button } from "~/components/ui/button";
-import { formatDate, type VolunteerPlan } from "~/lib/trips";
+import { formatDate, formatDateShort, type VolunteerPlan } from "~/lib/trips";
 import { cn } from "~/lib/utils";
 
 export function VolunteerPlanListItem({
   plan,
   showDistance = true,
   showActions = false,
+  canLogHours = false,
+  knownHours = null,
+  logHoursAvailableFrom = null,
+  allowEditHours = false,
   className,
 }: {
   plan: VolunteerPlan;
   showDistance?: boolean;
   showActions?: boolean;
+  canLogHours?: boolean;
+  knownHours?: number | null;
+  logHoursAvailableFrom?: string | null;
+  allowEditHours?: boolean;
   className?: string;
 }) {
   const when = plan.opportunity_date
@@ -36,9 +46,31 @@ export function VolunteerPlanListItem({
             ? ` · ${plan.distance_from_tournament}`
             : ""}
         </p>
+        {!canLogHours &&
+          plan.status === "registered" &&
+          logHoursAvailableFrom && (
+            <p className="text-xs text-muted-foreground italic">
+              You can log hours starting{" "}
+              {formatDateShort(logHoursAvailableFrom)}.
+            </p>
+          )}
       </div>
       <div className="flex items-center gap-2">
         <StatusBadge status={plan.status} />
+        {canLogHours && plan.status === "registered" && (
+          <LogHoursButton
+            planId={plan.id}
+            opportunityName={plan.opportunity_name}
+            knownHours={knownHours}
+          />
+        )}
+        {allowEditHours && plan.status === "completed" && (
+          <EditHoursButton
+            planId={plan.id}
+            opportunityName={plan.opportunity_name}
+            currentHours={plan.hours ?? 0}
+          />
+        )}
         {showActions && (
           <>
             {plan.signup_url && (
