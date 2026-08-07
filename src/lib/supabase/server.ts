@@ -2,8 +2,9 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { env } from "~/env";
 
-export async function createClient() {
+export async function createClient(options?: { rememberMe?: boolean }) {
   const cookieStore = await cookies();
+  const rememberMe = options?.rememberMe ?? true;
 
   return createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
@@ -16,7 +17,14 @@ export async function createClient() {
         setAll(cookiesToSet) {
           try {
             for (const { name, value, options } of cookiesToSet) {
-              cookieStore.set(name, value, options);
+              // When the user doesn't check "remember me", drop the
+              // persistence lifetime so the auth cookie becomes a
+              // session cookie (cleared when the browser fully closes)
+              // instead of surviving across restarts.
+              const cookieOptions = rememberMe
+                ? options
+                : { ...options, maxAge: undefined, expires: undefined };
+              cookieStore.set(name, value, cookieOptions);
             }
           } catch {
             // The `setAll` method is called from a Server Component.

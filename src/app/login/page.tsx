@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GoogleSignInButton } from "~/components/google-sign-in-button";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
@@ -50,6 +51,12 @@ export default async function LoginPage({
             autoComplete="current-password"
             required
           />
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="rememberMe" name="rememberMe" defaultChecked />
+          <Label htmlFor="rememberMe" className="font-normal">
+            Remember me
+          </Label>
         </div>
         {message && <p className="text-sm text-destructive">{message}</p>}
         <Button type="submit">Sign in</Button>

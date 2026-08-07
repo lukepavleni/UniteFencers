@@ -1,34 +1,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { isAdmin } from "~/lib/admin";
+import { requireAdmin } from "~/lib/auth";
+import { redirectWithMessage } from "~/lib/redirect-with-message";
 import { createAdminClient } from "~/lib/supabase/admin";
-import { createClient } from "~/lib/supabase/server";
 
 export async function sendAdminMessage(
   recipientId: string,
   formData: FormData,
 ) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  if (!isAdmin(user)) {
-    redirect("/");
-  }
+  const user = await requireAdmin();
 
   const body = (formData.get("body") as string | null)?.trim();
 
   if (!body) {
-    redirect(
-      `/admin?message=${encodeURIComponent("Message cannot be empty.")}`,
-    );
+    redirectWithMessage("/admin", "Message cannot be empty.");
   }
 
   const supabaseAdmin = createAdminClient();
@@ -39,9 +25,9 @@ export async function sendAdminMessage(
   });
 
   if (error) {
-    redirect(`/admin?message=${encodeURIComponent(error.message)}`);
+    redirectWithMessage("/admin", error.message);
   }
 
   revalidatePath("/admin");
-  redirect(`/admin?message=${encodeURIComponent("Message sent.")}`);
+  redirectWithMessage("/admin", "Message sent.");
 }

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { updateProfile } from "~/app/profile/actions";
 import { ProfileForm } from "~/components/profile-form";
 import { Avatar } from "~/components/ui/avatar";
+import { requireUser } from "~/lib/auth";
 import { getCurrentAge, type Profile } from "~/lib/profile";
 import { createClient } from "~/lib/supabase/server";
 import { formatDate } from "~/lib/trips";
@@ -12,14 +13,8 @@ export default async function ProfilePage({
   searchParams: Promise<{ message?: string }>;
 }) {
   const { message } = await searchParams;
+  const user = await requireUser();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
 
   const { data: profile } = await supabase
     .from("profiles")

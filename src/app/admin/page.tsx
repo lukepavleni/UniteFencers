@@ -1,8 +1,6 @@
-import { redirect } from "next/navigation";
 import { AdminUserTable } from "~/components/admin/admin-user-table";
-import { isAdmin } from "~/lib/admin";
+import { requireAdmin } from "~/lib/auth";
 import { getAdminOverview } from "~/lib/get-admin-overview";
-import { createClient } from "~/lib/supabase/server";
 
 export default async function AdminPage({
   searchParams,
@@ -10,18 +8,7 @@ export default async function AdminPage({
   searchParams: Promise<{ message?: string }>;
 }) {
   const { message } = await searchParams;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  if (!isAdmin(user)) {
-    redirect("/");
-  }
+  await requireAdmin();
 
   const users = await getAdminOverview();
 

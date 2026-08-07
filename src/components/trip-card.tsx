@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StatusBadge } from "~/components/status-badge";
+import { DeleteTripButton } from "~/components/delete-trip-button";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -8,8 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { VolunteerPlanListItem } from "~/components/volunteer-plan-list-item";
 import {
   formatDate,
+  formatDateShort,
   getDatesInRange,
   type Trip,
   type VolunteerPlan,
@@ -55,19 +57,19 @@ export function TripCard({
               ? trip.available_dates
                   .slice()
                   .sort()
-                  .map((date) => formatDate(date))
+                  .map((date) => formatDateShort(date))
                   .join(", ")
               : "None"}
           </p>
           {knockoutDates.length > 0 && (
             <p className="text-muted-foreground">
               Knockout:{" "}
-              {knockoutDates.map((date) => formatDate(date)).join(", ")}
+              {knockoutDates.map((date) => formatDateShort(date)).join(", ")}
             </p>
           )}
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline" size="sm">
             <Link href={`/trips/${trip.id}/edit`}>Edit Trip</Link>
           </Button>
@@ -76,6 +78,7 @@ export function TripCard({
               View Opportunities
             </Link>
           </Button>
+          <DeleteTripButton tripId={trip.id} nacName={trip.nac_name} />
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border pt-4">
@@ -83,25 +86,7 @@ export function TripCard({
           {plans.length > 0 ? (
             <ul className="flex flex-col gap-2">
               {plans.map((plan) => (
-                <li
-                  key={plan.id}
-                  className="flex flex-col gap-2 rounded-md border border-border p-3 text-sm sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="font-medium">{plan.opportunity_name}</p>
-                    <p className="text-muted-foreground">{plan.organization}</p>
-                    <p className="text-muted-foreground">
-                      {formatDate(plan.opportunity_date)}
-                      {plan.opportunity_time
-                        ? ` · ${plan.opportunity_time}`
-                        : ""}
-                      {plan.distance_from_tournament
-                        ? ` · ${plan.distance_from_tournament}`
-                        : ""}
-                    </p>
-                  </div>
-                  <StatusBadge status={plan.status} />
-                </li>
+                <VolunteerPlanListItem key={plan.id} plan={plan} showActions />
               ))}
             </ul>
           ) : (

@@ -5,10 +5,8 @@ import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Select } from "~/components/ui/select";
 import type { ProfileRole } from "~/lib/profile";
-
-const selectClassName =
-  "h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm dark:bg-input/30";
 
 interface ProfileFormDefaults {
   name?: string;
@@ -54,20 +52,19 @@ export function ProfileForm({
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="role">I am a...</Label>
-        <select
+        <Select
           id="role"
           name="role"
           required
           value={role}
           onChange={(event) => setRole(event.target.value as ProfileRole)}
-          className={selectClassName}
         >
           <option value="" disabled>
             Select one
           </option>
           <option value="adult">Parent / Adult</option>
           <option value="minor">Minor</option>
-        </select>
+        </Select>
       </div>
 
       {role === "minor" && (

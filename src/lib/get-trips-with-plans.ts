@@ -1,5 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Trip, VolunteerPlan } from "~/lib/trips";
+import {
+  type Trip,
+  VOLUNTEER_PLAN_COLUMNS,
+  type VolunteerPlan,
+} from "~/lib/trips";
 
 export async function getTripsWithPlans(
   supabase: SupabaseClient,
@@ -19,9 +23,7 @@ export async function getTripsWithPlans(
   if (tripList.length > 0) {
     const { data: plans } = await supabase
       .from("volunteer_plans")
-      .select(
-        "id, trip_id, opportunity_name, organization, opportunity_date, opportunity_time, distance_from_tournament, hours, status",
-      )
+      .select(VOLUNTEER_PLAN_COLUMNS)
       .in(
         "trip_id",
         tripList.map((trip) => trip.id),

@@ -11,10 +11,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { getDatesInRange } from "~/lib/trips";
-
-const selectClassName =
-  "h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm dark:bg-input/30";
+import { Select } from "~/components/ui/select";
+import { addDays, getDatesInRange } from "~/lib/trips";
 
 interface TripFormDefaults {
   nacName?: string;
@@ -60,8 +58,10 @@ export function TripForm({
     setNacName(value);
     const nac = findNacByName(value);
     if (nac) {
-      setArrivalDate(nac.startDate);
-      setDepartureDate(nac.endDate);
+      // Widen a day on each side of the NAC's own dates -- volunteers are
+      // usually in town (and available) the day before/after the event too.
+      setArrivalDate(addDays(nac.startDate, -1));
+      setDepartureDate(addDays(nac.endDate, 1));
       setCalendarOpen(true);
     }
   }
@@ -91,13 +91,12 @@ export function TripForm({
     >
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="nacName">NAC</Label>
-        <select
+        <Select
           id="nacName"
           name="nacName"
           required
           value={nacName}
           onChange={(event) => handleNacChange(event.target.value)}
-          className={selectClassName}
         >
           <option value="" disabled>
             Select a NAC
@@ -107,7 +106,7 @@ export function TripForm({
               {nac.name} — {nac.city}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

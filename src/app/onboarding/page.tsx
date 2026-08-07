@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { completeOnboarding } from "~/app/onboarding/actions";
 import { ProfileForm } from "~/components/profile-form";
-import { createClient } from "~/lib/supabase/server";
+import { requireUser } from "~/lib/auth";
 
 export default async function OnboardingPage({
   searchParams,
@@ -9,14 +9,7 @@ export default async function OnboardingPage({
   searchParams: Promise<{ message?: string }>;
 }) {
   const { message } = await searchParams;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  const user = await requireUser();
 
   if (user.user_metadata?.onboarding_complete === true) {
     redirect("/");
