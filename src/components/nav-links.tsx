@@ -10,8 +10,15 @@ const SIGNED_IN_LINKS = [
   { href: "/service-hours", label: "Service Hours" },
 ];
 
+// These 3 routes render AppSidebar instead, so the top nav stays clear there.
+const SHELL_ROUTES = new Set(["/", "/trips", "/service-hours"]);
+
 export function NavLinks() {
   const pathname = usePathname();
+
+  if (SHELL_ROUTES.has(pathname)) {
+    return null;
+  }
 
   return (
     <div className="hidden items-center gap-1 md:flex">

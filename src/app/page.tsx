@@ -1,5 +1,6 @@
 import { Heart, MapPin, Search } from "lucide-react";
 import Link from "next/link";
+import { AppShell } from "~/components/app-shell";
 import { Dashboard } from "~/components/dashboard";
 import { Button } from "~/components/ui/button";
 import { getCurrentUser } from "~/lib/auth";
@@ -22,14 +23,26 @@ const steps = [
   },
 ];
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    nac?: string;
+    distance?: string;
+    qualification?: string;
+  }>;
+}) {
   const user = await getCurrentUser();
 
-  if (user) {
-    return <Dashboard userId={user.id} />;
-  }
-
-  return <MarketingPage />;
+  return (
+    <AppShell>
+      {user ? (
+        <Dashboard userId={user.id} searchParams={await searchParams} />
+      ) : (
+        <MarketingPage />
+      )}
+    </AppShell>
+  );
 }
 
 function MarketingPage() {

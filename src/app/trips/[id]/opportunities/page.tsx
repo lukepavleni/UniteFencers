@@ -6,16 +6,17 @@ import { Button } from "~/components/ui/button";
 import { VolunteerOpportunityCard } from "~/components/volunteer-opportunity-card";
 import { VolunteerPlanListItem } from "~/components/volunteer-plan-list-item";
 import { requireUser } from "~/lib/auth";
+import {
+  DEFAULT_MAX_DISTANCE_MILES,
+  filterOpportunities,
+} from "~/lib/filter-opportunities";
 import { createClient } from "~/lib/supabase/server";
 import { VOLUNTEER_PLAN_COLUMNS, type VolunteerPlan } from "~/lib/trips";
 import {
-  getQualificationBucket,
   type QualificationFilter,
   VOLUNTEER_OPPORTUNITY_COLUMNS,
   type VolunteerOpportunity,
 } from "~/lib/volunteer-opportunities";
-
-const DEFAULT_MAX_DISTANCE_MILES = "10";
 
 export default async function TripOpportunitiesPage({
   params,
@@ -59,24 +60,14 @@ export default async function TripOpportunitiesPage({
     .not("signup_url", "is", null)
     .order("organization", { ascending: true });
 
-  const maxDistanceMiles =
-    distance === "any" ? null : Number.parseFloat(distance);
   const qualificationFilter = qualification as QualificationFilter;
 
   const venueAnnounced = trip.venue !== "Venue TBA";
   const catalogList = (opportunities ?? []) as VolunteerOpportunity[];
-  const opportunityList = catalogList
-    .filter(
-      (opportunity) =>
-        maxDistanceMiles == null ||
-        opportunity.distance_miles == null ||
-        opportunity.distance_miles <= maxDistanceMiles,
-    )
-    .filter(
-      (opportunity) =>
-        qualificationFilter === "any" ||
-        getQualificationBucket(opportunity) === qualificationFilter,
-    );
+  const opportunityList = filterOpportunities(catalogList, {
+    distance,
+    qualification: qualificationFilter,
+  });
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-2xl flex-col gap-8 px-4 py-12">

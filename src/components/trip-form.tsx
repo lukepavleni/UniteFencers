@@ -32,16 +32,33 @@ export function TripForm({
   defaultValues?: TripFormDefaults;
   message?: string;
 }) {
+  const defaultNac = defaultValues?.nacName
+    ? findNacByName(defaultValues.nacName)
+    : undefined;
+
   const [nacName, setNacName] = useState(defaultValues?.nacName ?? "");
   const [arrivalDate, setArrivalDate] = useState(
-    defaultValues?.arrivalDate ?? "",
+    defaultValues?.arrivalDate ??
+      (defaultNac ? addDays(defaultNac.startDate, -1) : ""),
   );
   const [departureDate, setDepartureDate] = useState(
-    defaultValues?.departureDate ?? "",
+    defaultValues?.departureDate ??
+      (defaultNac ? addDays(defaultNac.endDate, 1) : ""),
   );
-  const [availableDates, setAvailableDates] = useState<Set<string>>(
-    () => new Set(defaultValues?.availableDates ?? []),
-  );
+  const [availableDates, setAvailableDates] = useState<Set<string>>(() => {
+    if (defaultValues?.availableDates) {
+      return new Set(defaultValues.availableDates);
+    }
+    if (defaultNac) {
+      return new Set(
+        getDatesInRange(
+          addDays(defaultNac.startDate, -1),
+          addDays(defaultNac.endDate, 1),
+        ),
+      );
+    }
+    return new Set();
+  });
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const isFirstRender = useRef(true);

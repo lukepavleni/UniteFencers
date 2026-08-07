@@ -12,7 +12,8 @@ export type VolunteerPlanStatus =
   | "saved"
   | "registered"
   | "completed"
-  | "verified";
+  | "verified"
+  | "missed";
 
 export interface VolunteerPlan {
   id: string;
@@ -31,6 +32,17 @@ export interface VolunteerPlan {
 
 export const VOLUNTEER_PLAN_COLUMNS =
   "id, trip_id, opportunity_id, opportunity_name, organization, opportunity_date, opportunity_time, event_date_time, distance_from_tournament, signup_url, hours, status";
+
+export interface FencingScheduleEntry {
+  id: string;
+  trip_id: string;
+  event_date: string;
+  event_time: string | null;
+  label: string;
+}
+
+export const FENCING_SCHEDULE_ENTRY_COLUMNS =
+  "id, trip_id, event_date, event_time, label";
 
 export function formatDate(dateStr: string): string {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString("en-US", {

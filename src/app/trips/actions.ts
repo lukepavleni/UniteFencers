@@ -4,7 +4,16 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "~/lib/auth";
 import { redirectWithMessage } from "~/lib/redirect-with-message";
 import { createClient } from "~/lib/supabase/server";
+import { todayDateString } from "~/lib/trips";
+import { parseKnownDurationHours } from "~/lib/volunteer-opportunities";
 import { findNacByName, type NacOption } from "./nacs";
+
+function revalidateVolunteerPlanPaths(tripId: string) {
+  revalidatePath(`/trips/${tripId}/opportunities`);
+  revalidatePath("/trips");
+  revalidatePath("/service-hours");
+  revalidatePath("/");
+}
 
 interface TripInput {
   nacName: string;
@@ -185,9 +194,7 @@ export async function addVolunteerPlan(tripId: string, opportunityId: string) {
     status: "registered",
   });
 
-  revalidatePath(`/trips/${tripId}/opportunities`);
-  revalidatePath("/trips");
-  revalidatePath("/service-hours");
+  revalidateVolunteerPlanPaths(tripId);
 }
 
 export async function removeVolunteerPlan(planId: string) {
@@ -208,7 +215,90 @@ export async function removeVolunteerPlan(planId: string) {
     .eq("id", planId)
     .eq("user_id", user.id);
 
-  revalidatePath(`/trips/${plan.trip_id}/opportunities`);
-  revalidatePath("/trips");
-  revalidatePath("/service-hours");
+  revalidateVolunteerPlanPaths(plan.trip_id);
+}
+
+export async function logVolunteerHours(planId: string, formData: FormData) {
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  const { data: plan } = await supabase
+    .from("volunteer_plans")
+    .select("trip_id, opportunity_id")
+    .eq("id", planId)
+    .eq("user_id", user.id)
+    .single();
+  if (!plan) return;
+
+  const { data: trip } = await supabase
+    .from("trips")
+    .select("departure_date")
+    .eq("id", plan.trip_id)
+    .eq("user_id", user.id)
+    .single();
+  if (!trip || trip.departure_date >= todayDateString()) return;
+
+  const attended = formData.get("attended") === "yes";
+
+  if (!attended) {
+    await supabase
+      .from("volunteer_plans")
+      .update({ status: "missed" })
+      .eq("id", planId)
+      .eq("user_id", user.id);
+
+    revalidateVolunteerPlanPaths(plan.trip_id);
+    return;
+  }
+
+  let hours: number | null = null;
+
+  if (plan.opportunity_id) {
+    const { data: opportunity } = await supabase
+      .from("volunteer_opportunities")
+      .select("duration")
+      .eq("id", plan.opportunity_id)
+      .single();
+    hours = parseKnownDurationHours(opportunity?.duration ?? null);
+  }
+
+  if (hours == null) {
+    const manualHours = Number(formData.get("hours") ?? 0);
+    const manualMinutes = Number(formData.get("minutes") ?? 0);
+    hours = manualHours + manualMinutes / 60;
+  }
+
+  await supabase
+    .from("volunteer_plans")
+    .update({ status: "completed", hours })
+    .eq("id", planId)
+    .eq("user_id", user.id);
+
+  revalidateVolunteerPlanPaths(plan.trip_id);
+}
+
+export async function updateVolunteerHours(planId: string, formData: FormData) {
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  const { data: plan } = await supabase
+    .from("volunteer_plans")
+    .select("trip_id, status")
+    .eq("id", planId)
+    .eq("user_id", user.id)
+    .single();
+  if (!plan || plan.status !== "completed") return;
+
+  const manualHours = Number(formData.get("hours") ?? 0);
+  const manualMinutes = Number(formData.get("minutes") ?? 0);
+  const hours = manualHours + manualMinutes / 60;
+  if (hours <= 0) return;
+
+  await supabase
+    .from("volunteer_plans")
+    .update({ hours })
+    .eq("id", planId)
+    .eq("user_id", user.id);
+
+  revalidateVolunteerPlanPaths(plan.trip_id);
 }
