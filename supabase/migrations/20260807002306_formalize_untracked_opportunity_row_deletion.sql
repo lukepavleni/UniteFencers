@@ -1,0 +1,88 @@
+-- A separate, out-of-band process deleted these 73 volunteer_opportunities rows
+-- directly against the live database (not through a migration), between the last
+-- verified state of this table (205 rows) and this migration being written (132
+-- rows). The pattern: 48 were rows with no verifiable street address (marked
+-- "distance unknown" by the prior reconcile migration), spanning both the NAC
+-- groups this app matches and the unmatched Richmond/Vegas/Portland groups; none
+-- of the 73 had a real geocoded distance_miles.
+--
+-- This migration formalizes that already-applied deletion (a no-op against the
+-- current database -- these rows are already gone) so that migration history
+-- matches reality: replaying every migration from scratch reproduces the current
+-- table contents instead of resurrecting these rows.
+
+delete from public.volunteer_opportunities where id in (
+  '0139dc2a-89e3-46cb-a275-98dc2797142a',
+  '02127803-1bf3-437b-99d7-2f52d2b74870',
+  '06759c63-01f0-4afb-b95e-d926d443f6c4',
+  '0cff4ce4-e9ec-4c91-8cd8-68bf46bd9f5a',
+  '18dc36b6-2994-4c88-9d07-bbb6dab269d7',
+  '193c3052-97a8-49e7-b6a7-362efbae7b63',
+  '1c29e8ce-6470-484f-b4ce-542c1f33ce41',
+  '1e379b3c-2db3-49e5-af8e-cb3a8fc47990',
+  '265d2893-59e8-4f22-8d25-2013b54dbae2',
+  '289f0b1b-7da8-4807-8c96-1712df1c3376',
+  '2935f0ca-1154-4550-a474-87afb08731fa',
+  '2f5efbeb-8dee-4395-9eef-a92290b09215',
+  '353f661d-8c43-4488-b42d-eaf194595fb5',
+  '37b84645-afac-47ec-a13e-fb790f727895',
+  '395a17e7-06a3-45d6-abc7-a1e4995b6b79',
+  '39bcaaa6-8437-4650-b778-0b2af6d19f19',
+  '3dda2496-6999-4b47-b47b-1199b303230b',
+  '3f3a744d-931d-4b06-8fa7-7d0bd449bce4',
+  '484acbd4-4a7e-4824-8b9d-9764de1ec6b2',
+  '4d189927-9632-4795-9512-2d8e2d3cd7d7',
+  '56636d98-202a-499a-96ce-7333c54625b3',
+  '5a7da7de-bf03-4523-a521-2e8f91be1ba6',
+  '5fb1272d-ec84-4087-bfff-069fbe2108cd',
+  '6131ba55-6d0d-41ab-a595-042d2361a357',
+  '62ab8053-84ee-4660-9cf9-29d95ea56e3d',
+  '66d5f6bb-cfbc-451a-a077-cd74dd69410c',
+  '6c357b45-c7a3-4272-8655-696cd85c05fe',
+  '70364c7e-ef3e-4eba-ade7-49e6ac422d21',
+  '739d2667-6f7b-4dac-b157-1de91f64d902',
+  '7668dbe2-db85-4663-be8f-939b06779f1a',
+  '76c250df-4e9c-4563-968e-93f1af8a0985',
+  '78e5c994-6c12-4025-afa8-4460fdb76912',
+  '7bf4681d-b250-4d1f-839b-1fe6c687f73b',
+  '7c036ee1-798a-448c-88ba-287703add2e7',
+  '7cc0972b-7db8-4b80-9f11-fdd1e414f22c',
+  '7f2c59c7-df8f-4fe3-9813-fc9f0a31611c',
+  '7fbb6b8b-715d-4a49-8d4e-59dda9ffc30e',
+  '8192ca6a-5d18-48ea-be45-adb748e650ae',
+  '82671c08-4528-4d50-b76d-f837aec516ff',
+  '83640b97-462e-48f9-8834-4f19c0f43bbd',
+  '83b43ad6-410e-4a9f-b94c-280286ed6201',
+  '8b1655c8-dea4-42e8-99c6-092cf3262e01',
+  '8bb9ecd8-07ac-4caa-a35d-fe9402fbea75',
+  '902e0b5e-41d6-4f9f-8570-6135fbc35c49',
+  '970dce8f-f520-45ae-8256-5f022ea1a5b7',
+  '9ac1e736-7b47-438a-a155-8328e0a785f2',
+  'a15809f2-7041-47a4-a859-47d7b4360b8c',
+  'a358dd22-f508-40d2-b7b6-ce5b0def3176',
+  'a71827b7-b312-4741-87a4-7edc44d19d6e',
+  'a91b62bf-5cc9-4dc8-b870-d8d1608c06de',
+  'aa24bf4a-6535-4764-a866-e7edb840713d',
+  'ae872706-837e-4de7-8dde-0729aead280d',
+  'c586344b-60a1-45e5-93b5-ce276914b487',
+  'c5bd4861-9cab-47a8-8fa6-b8047f746b21',
+  'c6ae2b10-c1be-46a9-acf0-5d348f6478d5',
+  'c80dfbe5-8e17-4a8e-bcaf-87eea29b6ddb',
+  'ca02cc13-40ba-4e1a-bf67-b96918e924ee',
+  'dc412641-8a19-43b1-a515-d06757182db3',
+  'ddc140b3-3a3d-4213-b6d0-2609fc27983b',
+  'de6e86cb-eb34-4ed6-a3d1-f3ee72eaeba0',
+  'e11cd9d4-ed9b-4714-b9de-b014aca11fed',
+  'e194da40-a2dc-4b83-a443-82407d35271b',
+  'e93f6201-4fde-4eff-93f3-1622d5c1731a',
+  'eec91a01-b36a-42c6-8988-fe991b0e522e',
+  'ef8379b1-701b-4d04-91d2-db661aa648ba',
+  'f06bbaa2-2764-4f63-b671-248dff18b8cd',
+  'f17ef536-2efc-4e7d-8804-7a69748b0eb5',
+  'f18d1c86-b0ad-4273-81ec-0f2c6117d82f',
+  'f3574f81-200f-439c-a16f-e90e2c193448',
+  'f9229aec-5d3b-4e7e-84d5-8802b2cdef9e',
+  'fe19b3d5-c9a2-4f67-88aa-7414cd327d37',
+  'fe809a9e-a516-4722-a3a1-af96cc1c7769',
+  'ff4edfc6-5489-4e27-bbb9-fac771207d1d'
+);
