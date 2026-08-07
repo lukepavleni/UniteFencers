@@ -12,7 +12,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Select } from "~/components/ui/select";
-import { getDatesInRange } from "~/lib/trips";
+import { addDays, getDatesInRange } from "~/lib/trips";
 
 interface TripFormDefaults {
   nacName?: string;
@@ -58,8 +58,10 @@ export function TripForm({
     setNacName(value);
     const nac = findNacByName(value);
     if (nac) {
-      setArrivalDate(nac.startDate);
-      setDepartureDate(nac.endDate);
+      // Widen a day on each side of the NAC's own dates -- volunteers are
+      // usually in town (and available) the day before/after the event too.
+      setArrivalDate(addDays(nac.startDate, -1));
+      setDepartureDate(addDays(nac.endDate, 1));
       setCalendarOpen(true);
     }
   }

@@ -4,7 +4,8 @@ import type { VolunteerPlanStatus } from "~/lib/trips";
 export interface AdminVolunteerPlanOverview {
   id: string;
   opportunityName: string;
-  opportunityDate: string;
+  opportunityDate: string | null;
+  eventDateTime: string | null;
   status: VolunteerPlanStatus;
 }
 
@@ -39,7 +40,8 @@ interface VolunteerPlanRow {
   id: string;
   trip_id: string;
   opportunity_name: string;
-  opportunity_date: string;
+  opportunity_date: string | null;
+  event_date_time: string | null;
   status: VolunteerPlanStatus;
 }
 
@@ -55,7 +57,9 @@ export async function getAdminOverview(): Promise<AdminUserOverview[]> {
       ),
     supabaseAdmin
       .from("volunteer_plans")
-      .select("id, trip_id, opportunity_name, opportunity_date, status"),
+      .select(
+        "id, trip_id, opportunity_name, opportunity_date, event_date_time, status",
+      ),
   ]);
 
   const plansByTripId = new Map<string, AdminVolunteerPlanOverview[]>();
@@ -65,6 +69,7 @@ export async function getAdminOverview(): Promise<AdminUserOverview[]> {
       id: plan.id,
       opportunityName: plan.opportunity_name,
       opportunityDate: plan.opportunity_date,
+      eventDateTime: plan.event_date_time,
       status: plan.status,
     });
     plansByTripId.set(plan.trip_id, existing);

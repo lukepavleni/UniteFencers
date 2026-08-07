@@ -44,7 +44,9 @@ export function AdminUserTable({ users }: { users: AdminUserOverview[] }) {
                               >
                                 <span>
                                   {plan.opportunityName} —{" "}
-                                  {formatDate(plan.opportunityDate)}
+                                  {plan.opportunityDate
+                                    ? formatDate(plan.opportunityDate)
+                                    : (plan.eventDateTime ?? "Date TBA")}
                                 </span>
                                 <StatusBadge status={plan.status} />
                               </li>

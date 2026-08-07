@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DeleteTripButton } from "~/components/delete-trip-button";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -10,6 +11,7 @@ import {
 import { VolunteerPlanListItem } from "~/components/volunteer-plan-list-item";
 import {
   formatDate,
+  formatDateShort,
   getDatesInRange,
   type Trip,
   type VolunteerPlan,
@@ -55,19 +57,19 @@ export function TripCard({
               ? trip.available_dates
                   .slice()
                   .sort()
-                  .map((date) => formatDate(date))
+                  .map((date) => formatDateShort(date))
                   .join(", ")
               : "None"}
           </p>
           {knockoutDates.length > 0 && (
             <p className="text-muted-foreground">
               Knockout:{" "}
-              {knockoutDates.map((date) => formatDate(date)).join(", ")}
+              {knockoutDates.map((date) => formatDateShort(date)).join(", ")}
             </p>
           )}
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline" size="sm">
             <Link href={`/trips/${trip.id}/edit`}>Edit Trip</Link>
           </Button>
@@ -76,6 +78,7 @@ export function TripCard({
               View Opportunities
             </Link>
           </Button>
+          <DeleteTripButton tripId={trip.id} nacName={trip.nac_name} />
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border pt-4">
@@ -83,7 +86,7 @@ export function TripCard({
           {plans.length > 0 ? (
             <ul className="flex flex-col gap-2">
               {plans.map((plan) => (
-                <VolunteerPlanListItem key={plan.id} plan={plan} />
+                <VolunteerPlanListItem key={plan.id} plan={plan} showActions />
               ))}
             </ul>
           ) : (

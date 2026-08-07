@@ -132,3 +132,83 @@ export async function updateTrip(tripId: string, formData: FormData) {
   revalidatePath("/trips");
   redirectWithMessage("/trips", "Trip updated.");
 }
+
+export async function deleteTrip(tripId: string) {
+  const user = await requireUser();
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("trips")
+    .delete()
+    .eq("id", tripId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    redirectWithMessage("/trips", error.message);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/trips");
+  redirectWithMessage("/trips", "Trip deleted.");
+}
+
+export async function addVolunteerPlan(tripId: string, opportunityId: string) {
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  const { data: trip } = await supabase
+    .from("trips")
+    .select("id")
+    .eq("id", tripId)
+    .eq("user_id", user.id)
+    .single();
+  if (!trip) return;
+
+  const { data: opportunity } = await supabase
+    .from("volunteer_opportunities")
+    .select(
+      "event_name, organization, event_date_time, distance_from_venue, signup_url",
+    )
+    .eq("id", opportunityId)
+    .single();
+  if (!opportunity) return;
+
+  await supabase.from("volunteer_plans").insert({
+    trip_id: tripId,
+    user_id: user.id,
+    opportunity_id: opportunityId,
+    opportunity_name: opportunity.event_name,
+    organization: opportunity.organization,
+    event_date_time: opportunity.event_date_time,
+    distance_from_tournament: opportunity.distance_from_venue,
+    signup_url: opportunity.signup_url,
+    status: "registered",
+  });
+
+  revalidatePath(`/trips/${tripId}/opportunities`);
+  revalidatePath("/trips");
+  revalidatePath("/service-hours");
+}
+
+export async function removeVolunteerPlan(planId: string) {
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  const { data: plan } = await supabase
+    .from("volunteer_plans")
+    .select("trip_id")
+    .eq("id", planId)
+    .eq("user_id", user.id)
+    .single();
+  if (!plan) return;
+
+  await supabase
+    .from("volunteer_plans")
+    .delete()
+    .eq("id", planId)
+    .eq("user_id", user.id);
+
+  revalidatePath(`/trips/${plan.trip_id}/opportunities`);
+  revalidatePath("/trips");
+  revalidatePath("/service-hours");
+}
