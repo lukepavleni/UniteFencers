@@ -18,7 +18,7 @@ async function signOut() {
 
 export async function Navbar() {
   const user = await getCurrentUser();
-  const admin = isAdmin(user);
+  const admin = await isAdmin(user);
 
   return (
     <nav className="relative border-b border-border bg-background">
