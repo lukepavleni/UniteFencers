@@ -12,7 +12,7 @@
   --color-popover-foreground: oklch(0.145 0 0);
   --color-border: oklch(0.92 0 0);
   --color-input: oklch(0.92 0 0);
-  --color-primary: oklch(0.205 0 0);
+  --color-primary: oklch(0.24 0.06 258);
   --color-primary-foreground: oklch(0.985 0 0);
   --color-secondary: oklch(0.967 0 0);
   --color-secondary-foreground: oklch(0.205 0 0);
@@ -25,9 +25,11 @@
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
 
-  /* Brand accent — electric lime, used for premium marketing surfaces */
-  --color-brand: oklch(0.87 0.24 142);
-  --color-brand-foreground: oklch(0.145 0 0);
+  /* UniteFencers brand accents */
+  --color-navy: oklch(0.24 0.06 258);
+  --color-navy-foreground: oklch(0.985 0 0);
+  --color-brand: oklch(0.55 0.22 27);
+  --color-brand-foreground: oklch(0.985 0 0);
 }
 
 .dark {
