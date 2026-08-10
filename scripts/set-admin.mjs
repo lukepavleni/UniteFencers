@@ -4,8 +4,8 @@
 //   node --env-file=.env.local scripts/set-admin.mjs someone@example.com
 //
 // Requires SUPABASE_SERVICE_ROLE_KEY and NEXT_PUBLIC_SUPABASE_URL to be set
-// (e.g. in .env.local). Sets app_metadata.is_admin = true for the given
-// user, which src/lib/admin.ts checks to gate access to /admin.
+// (e.g. in .env.local). Sets profiles.is_admin = true for the given user's
+// profile row, which src/lib/admin.ts checks to gate access to /admin.
 
 import { createClient } from "@supabase/supabase-js";
 
@@ -58,13 +58,13 @@ if (!user) {
   process.exit(1);
 }
 
-const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
-  user.id,
-  { app_metadata: { is_admin: true } },
-);
+const { error: updateError } = await supabaseAdmin
+  .from("profiles")
+  .update({ is_admin: true })
+  .eq("id", user.id);
 
 if (updateError) {
-  console.error("Failed to update user:", updateError.message);
+  console.error("Failed to update profile:", updateError.message);
   process.exit(1);
 }
 

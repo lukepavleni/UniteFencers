@@ -23,7 +23,7 @@ export async function requireUser() {
 
 export async function requireAdmin() {
   const user = await requireUser();
-  if (!isAdmin(user)) {
+  if (!(await isAdmin(user))) {
     redirect("/");
   }
   return user;
