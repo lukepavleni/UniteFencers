@@ -47,7 +47,7 @@ export function OpportunitySignupActions({
                 "Added to My Trip"
               ) : hasClickedSignUp ? (
                 <>
-                  <Check /> Signed Up — Add to My Trip
+                  <Check /> Did you sign up? Add it to my trip
                 </>
               ) : (
                 "Add to My Trip"
