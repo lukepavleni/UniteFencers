@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AccountMenu } from "~/components/account-menu";
@@ -24,7 +25,17 @@ export async function Navbar() {
     <nav className="relative border-b border-border bg-background">
       <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-x-4 px-4 py-2 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
-          <Link href="/" className="shrink-0 text-lg font-bold tracking-tight">
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-2 text-lg font-bold tracking-tight"
+          >
+            <Image
+              src="/logo.png"
+              alt=""
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
             <span className="text-navy">Unite</span>
             <span className="text-brand">Fencers</span>
           </Link>
