@@ -10,7 +10,7 @@ export function OurMissionContent() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4 text-muted-foreground">
+      <div className="flex flex-col gap-4 text-foreground">
         <p>
           Our mission is to strengthen the fencing community by making it easier
           for people to connect, contribute, and give back.
@@ -44,7 +44,7 @@ export function OurMissionContent() {
         <h3 className="text-xl font-bold tracking-tight sm:text-2xl">
           Why It Matters
         </h3>
-        <div className="flex flex-col gap-4 text-muted-foreground">
+        <div className="flex flex-col gap-4 text-foreground">
           <p>
             Fencing is about more than competition. It is also about the people
             who make the sport possible.
