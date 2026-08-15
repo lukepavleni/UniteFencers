@@ -7,7 +7,7 @@ export function AboutLukeContent() {
         </h2>
       </div>
 
-      <div className="flex flex-col gap-4 text-muted-foreground">
+      <div className="flex flex-col gap-4 text-foreground">
         <p>
           Luke is a fencer and the creator of Unite Fencers. Through his
           involvement in fencing, he has seen how much time and effort goes into
