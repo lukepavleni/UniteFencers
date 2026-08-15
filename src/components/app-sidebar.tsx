@@ -16,7 +16,7 @@ const NAV_ITEMS = [
   { href: "/trips", label: "My Trips", icon: MapPin },
   { href: "/service-hours", label: "Service Hours", icon: Clock },
   { href: "/mission", label: "Our Mission", icon: Heart },
-  { href: "/about-luke", label: "About Luke", icon: User },
+  { href: "/about-luke", label: "About us", icon: User },
 ];
 
 export function AppSidebar() {

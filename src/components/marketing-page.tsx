@@ -47,7 +47,7 @@ export function MarketingPage() {
             Our Mission
           </TabsTrigger>
           <TabsTrigger value="about-luke" className={TAB_TRIGGER_CLASS}>
-            About Luke
+            About us
           </TabsTrigger>
         </TabsList>
 
