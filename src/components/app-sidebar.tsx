@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleHelp, Clock, Home, MapPin } from "lucide-react";
+import { CircleHelp, Clock, Heart, Home, MapPin, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
@@ -15,6 +15,8 @@ const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/trips", label: "My Trips", icon: MapPin },
   { href: "/service-hours", label: "Service Hours", icon: Clock },
+  { href: "/mission", label: "Our Mission", icon: Heart },
+  { href: "/about-luke", label: "About Luke", icon: User },
 ];
 
 export function AppSidebar() {
