@@ -36,8 +36,10 @@ export async function Navbar() {
               height={32}
               className="h-8 w-8"
             />
-            <span className="text-navy">Unite</span>
-            <span className="text-brand">Fencers</span>
+            <span>
+              <span className="text-navy">Unite</span>
+              <span className="text-brand">Fencers</span>
+            </span>
           </Link>
           {user && <NavLinks />}
         </div>
