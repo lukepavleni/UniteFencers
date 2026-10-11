@@ -20,7 +20,7 @@ export function FencingSchedulePanel({
     );
 
   return (
-    <Card>
+    <Card className="overflow-hidden border-t-4 border-t-tone-sky">
       <CardHeader>
         <CardTitle className="text-base">Your fencing schedule</CardTitle>
       </CardHeader>

@@ -1,4 +1,6 @@
+import { Clock } from "lucide-react";
 import { AppShell } from "~/components/app-shell";
+import { PageHeader } from "~/components/page-header";
 import { ServiceHoursSummary } from "~/components/service-hours-summary";
 import { VolunteerPlanListItem } from "~/components/volunteer-plan-list-item";
 import { requireUser } from "~/lib/auth";
@@ -40,18 +42,20 @@ export default async function ServiceHoursPage() {
   return (
     <AppShell>
       <main className="flex flex-col gap-8 py-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold tracking-tight">Service Hours</h1>
-          <p className="text-sm text-muted-foreground">
-            Track your volunteering activity across every trip.
-          </p>
-        </div>
+        <PageHeader
+          icon={Clock}
+          title="Service Hours"
+          description="Track your volunteering activity across every trip."
+        />
 
         <ServiceHoursSummary plans={planList} />
 
         {planList.length > 0 && (
           <div className="flex flex-col gap-3">
-            <h2 className="text-lg font-semibold">All Activities</h2>
+            <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+              <span className="h-5 w-1.5 rounded-full bg-brand" />
+              All Activities
+            </h2>
             <ul className="flex flex-col gap-2">
               {planList.map((plan) => {
                 const departureDate = tripDepartureById.get(plan.trip_id);

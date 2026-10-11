@@ -23,7 +23,7 @@ export async function Navbar() {
 
   return (
     <nav className="relative border-b border-border bg-background">
-      <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-x-4 px-4 py-2 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-14 max-w-[90rem] items-center justify-between gap-x-4 px-4 py-2 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link
             href="/"

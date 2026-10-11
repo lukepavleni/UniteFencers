@@ -1,6 +1,16 @@
+import {
+  ArrowRight,
+  CalendarCheck,
+  CalendarDays,
+  Clock,
+  Inbox,
+  MapPin,
+  SearchX,
+} from "lucide-react";
 import Link from "next/link";
 import { addVolunteerPlan } from "~/app/trips/actions";
 import { findNacByName, NAC_OPTIONS } from "~/app/trips/nacs";
+import { DashboardHero } from "~/components/dashboard-hero";
 import { EditAvailabilityButton } from "~/components/edit-availability-button";
 import { FencingSchedulePanel } from "~/components/fencing-schedule-panel";
 import { NacSwitcher } from "~/components/nac-switcher";
@@ -9,6 +19,7 @@ import { PlanStatusPanel } from "~/components/plan-status-panel";
 import { StatCardRow } from "~/components/stat-card-row";
 import { Button } from "~/components/ui/button";
 import { VolunteerOpportunityCard } from "~/components/volunteer-opportunity-card";
+import { getCurrentUser } from "~/lib/auth";
 import {
   DEFAULT_MAX_DISTANCE_MILES,
   filterOpportunities,
@@ -20,9 +31,11 @@ import {
   addDays,
   FENCING_SCHEDULE_ENTRY_COLUMNS,
   type FencingScheduleEntry,
+  formatDateShort,
   type Trip,
   todayDateString,
 } from "~/lib/trips";
+import { cn } from "~/lib/utils";
 import {
   type QualificationFilter,
   VOLUNTEER_OPPORTUNITY_COLUMNS,
@@ -44,6 +57,50 @@ function resolveSelectedNacName(
   return (upcomingNac ?? NAC_OPTIONS[NAC_OPTIONS.length - 1]).name;
 }
 
+const BENEFITS = [
+  {
+    icon: MapPin,
+    tone: "sky",
+    title: "Opportunities near the venue",
+    body: "Browse volunteer events sorted by distance from your tournament.",
+  },
+  {
+    icon: CalendarCheck,
+    tone: "emerald",
+    title: "Fits your fencing schedule",
+    body: "Add your bouts and free days so service never clashes with fencing.",
+  },
+  {
+    icon: Clock,
+    tone: "violet",
+    title: "Track your service hours",
+    body: "Save plans, log hours after the trip, and get them confirmed.",
+  },
+] as const;
+
+const BENEFIT_STYLES = {
+  sky: "bg-tone-sky/10 border-tone-sky/30 [&_span]:bg-tone-sky",
+  emerald: "bg-tone-emerald/10 border-tone-emerald/30 [&_span]:bg-tone-emerald",
+  violet: "bg-tone-violet/10 border-tone-violet/30 [&_span]:bg-tone-violet",
+} as const;
+
+function EmptyNote({
+  icon: Icon,
+  children,
+}: {
+  icon: typeof Inbox;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-tone-sky/40 bg-tone-sky/5 p-8 text-center text-sm text-muted-foreground">
+      <span className="flex size-12 items-center justify-center rounded-full bg-tone-sky/15 text-tone-sky">
+        <Icon className="size-6" />
+      </span>
+      <p className="max-w-sm">{children}</p>
+    </div>
+  );
+}
+
 export async function Dashboard({
   userId,
   searchParams = {},
@@ -56,6 +113,9 @@ export async function Dashboard({
   };
 }) {
   const supabase = await createClient();
+  const user = await getCurrentUser();
+  const fullName = user?.user_metadata?.full_name as string | undefined;
+  const firstName = fullName?.trim().split(/\s+/)[0];
   const { trips, plansByTripId } = await getTripsWithPlans(supabase, userId);
 
   const today = todayDateString();
@@ -68,38 +128,107 @@ export async function Dashboard({
   const nacInfo = findNacByName(selectedNacName);
 
   if (!selectedTrip) {
+    const { count: catalogCount } = await supabase
+      .from("volunteer_opportunities")
+      .select("id", { count: "exact", head: true })
+      .eq("nac_event", selectedNacName)
+      .not("signup_url", "is", null);
+
     return (
       <main className="flex flex-col gap-6 py-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">
-              Find service near your fencing schedule
-            </h1>
-            {nacInfo && (
-              <p className="text-sm text-muted-foreground">
-                {nacInfo.name} · {nacInfo.city} · {nacInfo.venue}
-              </p>
-            )}
-          </div>
-          <NacSwitcher
-            nacOptions={NAC_OPTIONS}
-            selectedNacName={selectedNacName}
-          />
-        </div>
+        <DashboardHero
+          firstName={firstName}
+          nacName={nacInfo?.name ?? selectedNacName}
+          city={nacInfo?.city}
+          venue={nacInfo?.venue}
+          startDate={nacInfo?.startDate}
+          endDate={nacInfo?.endDate}
+          actions={
+            <NacSwitcher
+              nacOptions={NAC_OPTIONS}
+              selectedNacName={selectedNacName}
+            />
+          }
+        />
 
-        <div className="flex flex-col items-center gap-4 rounded-lg border border-border p-10 text-center">
-          <p className="text-muted-foreground">
+        <div className="flex flex-col items-center gap-5 rounded-2xl border-2 border-brand/30 bg-linear-to-b from-brand/10 to-brand/5 px-6 py-12 text-center">
+          <p className="text-xl font-semibold tracking-tight sm:text-2xl">
             You haven't planned a trip for {nacInfo?.name ?? selectedNacName}{" "}
             yet.
           </p>
-          <Button asChild>
+          <p className="max-w-md text-muted-foreground">
+            Plan your trip to find volunteer opportunities near the tournament.
+          </p>
+          {catalogCount ? (
+            <span className="rounded-full bg-tone-emerald/15 px-4 py-1.5 text-sm font-semibold text-tone-emerald">
+              {catalogCount} volunteer{" "}
+              {catalogCount === 1 ? "opportunity" : "opportunities"} waiting
+            </span>
+          ) : null}
+          <Button
+            asChild
+            size="lg"
+            className="h-14 gap-3 bg-brand px-10 text-lg font-bold text-brand-foreground shadow-lg shadow-brand/30 transition-transform hover:scale-105 hover:bg-brand/90"
+          >
             <Link
               href={`/trips/new?nac=${encodeURIComponent(selectedNacName)}`}
             >
-              Plan This Trip
+              Find Volunteer Opportunities &amp; Plan This Trip
+              <ArrowRight className="size-5" />
             </Link>
           </Button>
         </div>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold tracking-tight">
+            What you'll get
+          </h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            {BENEFITS.map(({ icon: Icon, tone, title, body }) => (
+              <div
+                key={title}
+                className={`flex flex-col gap-3 rounded-xl border p-5 ${BENEFIT_STYLES[tone]}`}
+              >
+                <span className="flex size-10 items-center justify-center rounded-xl text-white shadow-sm">
+                  <Icon className="size-5" />
+                </span>
+                <p className="font-semibold">{title}</p>
+                <p className="text-sm text-muted-foreground">{body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold tracking-tight">
+            Upcoming tournaments
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {NAC_OPTIONS.filter((nac) => nac.endDate >= today).map((nac) => (
+              <Link
+                key={nac.name}
+                href={`/?nac=${encodeURIComponent(nac.name)}`}
+                className={cn(
+                  "flex flex-col gap-1 rounded-xl border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md",
+                  nac.name === selectedNacName
+                    ? "border-brand ring-2 ring-brand/20"
+                    : "border-border",
+                )}
+              >
+                <p className="font-semibold">{nac.name}</p>
+                <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <MapPin className="size-3.5" />
+                  {nac.city}
+                </p>
+                <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <CalendarDays className="size-3.5" />
+                  {formatDateShort(nac.startDate)} –{" "}
+                  {formatDateShort(nac.endDate)}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
     );
   }
@@ -148,29 +277,30 @@ export async function Dashboard({
 
   return (
     <main className="flex flex-col gap-6 py-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Find service near your fencing schedule
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {selectedTrip.nac_name} · {selectedTrip.city} · {selectedTrip.venue}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <NacSwitcher
-            nacOptions={NAC_OPTIONS}
-            selectedNacName={selectedNacName}
-          />
-          <EditAvailabilityButton trip={selectedTrip} />
-        </div>
-      </div>
+      <DashboardHero
+        firstName={firstName}
+        nacName={selectedTrip.nac_name}
+        city={selectedTrip.city}
+        venue={selectedTrip.venue}
+        startDate={nacInfo?.startDate ?? selectedTrip.arrival_date}
+        endDate={nacInfo?.endDate ?? selectedTrip.departure_date}
+        actions={
+          <>
+            <NacSwitcher
+              nacOptions={NAC_OPTIONS}
+              selectedNacName={selectedNacName}
+            />
+            <EditAvailabilityButton trip={selectedTrip} />
+          </>
+        }
+      />
 
       <StatCardRow stats={stats} />
 
       <div className="flex flex-col gap-6 lg:flex-row">
         <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <h2 className="text-lg font-semibold tracking-tight">
+          <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+            <span className="h-5 w-1.5 rounded-full bg-brand" />
             Recommended opportunities
           </h2>
           <OpportunityFilters
@@ -194,15 +324,15 @@ export async function Dashboard({
               ))}
             </ul>
           ) : catalogList.length > 0 ? (
-            <p className="rounded-lg border border-border p-6 text-center text-sm text-muted-foreground">
+            <EmptyNote icon={SearchX}>
               No opportunities match your filters — try widening the distance or
               sign-up type above.
-            </p>
+            </EmptyNote>
           ) : (
-            <p className="rounded-lg border border-border p-6 text-center text-sm text-muted-foreground">
+            <EmptyNote icon={Inbox}>
               No volunteer opportunities are in our catalog for this NAC yet —
               check back closer to the tournament.
-            </p>
+            </EmptyNote>
           )}
         </div>
 
