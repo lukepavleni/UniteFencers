@@ -122,13 +122,6 @@ export function MarketingPage() {
           </section>
         </TabsContent>
       </Tabs>
-
-      <footer className="border-t border-border px-4 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 text-center text-sm text-muted-foreground sm:flex-row sm:justify-between sm:text-left">
-          <p>© 2026 UniteFencers</p>
-          <p>Made for the fencing community.</p>
-        </div>
-      </footer>
     </main>
   );
 }
