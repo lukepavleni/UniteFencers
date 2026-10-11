@@ -22,14 +22,10 @@ export function ServiceHoursSummary({ plans }: { plans: VolunteerPlan[] }) {
           You haven't logged any service hours yet. Plan a trip and save
           volunteer opportunities to start tracking your hours.
         </p>
-        <Button
-          asChild
-          size="lg"
-          className="bg-brand text-brand-foreground shadow-lg shadow-brand/30 hover:bg-brand/90"
-        >
+        <Button asChild variant="cta" size="cta">
           <Link href="/trips/new">
             Plan Your Volunteering
-            <ArrowRight className="size-4" />
+            <ArrowRight />
           </Link>
         </Button>
       </div>

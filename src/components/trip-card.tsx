@@ -86,14 +86,10 @@ export function TripCard({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="cta">
             <Link href={`/trips/${trip.id}/edit`}>Edit Trip</Link>
           </Button>
-          <Button
-            asChild
-            size="sm"
-            className="bg-brand text-brand-foreground hover:bg-brand/90"
-          >
+          <Button asChild variant="cta" size="cta">
             <Link href={`/trips/${trip.id}/opportunities`}>
               View Opportunities
             </Link>

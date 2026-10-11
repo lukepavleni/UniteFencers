@@ -36,13 +36,10 @@ export default async function TripsPage({
           description="Every fencing trip you've planned, and the volunteering saved against each one."
           actions={
             trips.length > 0 ? (
-              <Button
-                asChild
-                className="bg-brand text-brand-foreground shadow-lg shadow-black/20 hover:bg-brand/90"
-              >
+              <Button asChild variant="cta" size="cta">
                 <Link href="/trips/new">
                   Plan New Trip
-                  <ArrowRight className="size-4" />
+                  <ArrowRight />
                 </Link>
               </Button>
             ) : null
@@ -93,14 +90,10 @@ export default async function TripsPage({
             <p className="text-lg font-semibold">
               You have not planned any fencing trips yet.
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="bg-brand text-brand-foreground shadow-lg shadow-brand/30 hover:bg-brand/90"
-            >
+            <Button asChild variant="cta" size="cta">
               <Link href="/trips/new">
                 Plan Your First Trip
-                <ArrowRight className="size-4" />
+                <ArrowRight />
               </Link>
             </Button>
           </div>

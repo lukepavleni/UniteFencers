@@ -72,7 +72,12 @@ export function FencingSchedulePanel({
         <ScheduleEntryDialog
           tripId={tripId}
           trigger={
-            <Button type="button" size="sm" className="self-start">
+            <Button
+              type="button"
+              variant="cta"
+              size="cta"
+              className="self-start"
+            >
               Add schedule entry
             </Button>
           }

@@ -50,7 +50,7 @@ export function LogHoursButton({
       }}
     >
       <DialogTrigger asChild>
-        <Button type="button" size="sm">
+        <Button type="button" variant="cta" size="cta">
           Log Hours
         </Button>
       </DialogTrigger>

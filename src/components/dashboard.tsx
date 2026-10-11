@@ -167,8 +167,9 @@ export async function Dashboard({
           ) : null}
           <Button
             asChild
-            size="lg"
-            className="h-14 gap-3 bg-brand px-10 text-lg font-bold text-brand-foreground shadow-lg shadow-brand/30 transition-transform hover:scale-105 hover:bg-brand/90"
+            variant="cta"
+            size="cta"
+            className="transition-transform hover:scale-105"
           >
             <Link
               href={`/trips/new?nac=${encodeURIComponent(selectedNacName)}`}

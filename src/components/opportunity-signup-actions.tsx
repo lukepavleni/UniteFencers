@@ -20,7 +20,7 @@ export function OpportunitySignupActions({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
-        <Button asChild size="sm">
+        <Button asChild variant="cta" size="cta">
           <a
             href={signupUrl}
             target="_blank"
@@ -34,7 +34,7 @@ export function OpportunitySignupActions({
           <form action={addAction}>
             <Button
               type="submit"
-              size="sm"
+              size="cta"
               variant={isSaved ? "outline" : "secondary"}
               disabled={isSaved}
               className={cn(
