@@ -20,7 +20,7 @@ export function FencingSchedulePanel({
     );
 
   return (
-    <Card>
+    <Card className="overflow-hidden border-t-4 border-t-tone-sky">
       <CardHeader>
         <CardTitle className="text-base">Your fencing schedule</CardTitle>
       </CardHeader>
@@ -72,7 +72,12 @@ export function FencingSchedulePanel({
         <ScheduleEntryDialog
           tripId={tripId}
           trigger={
-            <Button type="button" size="sm" className="self-start">
+            <Button
+              type="button"
+              variant="cta"
+              size="cta"
+              className="self-start"
+            >
               Add schedule entry
             </Button>
           }

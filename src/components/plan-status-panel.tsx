@@ -15,7 +15,7 @@ export function PlanStatusPanel({
   logHoursAvailableFrom: string | null;
 }) {
   return (
-    <Card>
+    <Card className="overflow-hidden border-t-4 border-t-tone-emerald">
       <CardHeader>
         <CardTitle className="text-base">Your volunteering plans</CardTitle>
       </CardHeader>

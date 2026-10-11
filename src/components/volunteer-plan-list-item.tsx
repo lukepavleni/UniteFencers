@@ -1,7 +1,7 @@
 import { removeVolunteerPlan } from "~/app/trips/actions";
 import { EditHoursButton } from "~/components/edit-hours-button";
 import { LogHoursButton } from "~/components/log-hours-button";
-import { StatusBadge } from "~/components/status-badge";
+import { STATUS_ACCENT, StatusBadge } from "~/components/status-badge";
 import { Button } from "~/components/ui/button";
 import { formatDate, formatDateShort, type VolunteerPlan } from "~/lib/trips";
 import { cn } from "~/lib/utils";
@@ -32,7 +32,8 @@ export function VolunteerPlanListItem({
   return (
     <li
       className={cn(
-        "flex flex-col gap-2 rounded-md border border-border p-3 text-sm sm:flex-row sm:items-center sm:justify-between",
+        "flex flex-col gap-2 rounded-xl border border-l-4 border-border bg-card p-4 text-sm shadow-sm sm:flex-row sm:items-center sm:justify-between",
+        STATUS_ACCENT[plan.status],
         className,
       )}
     >
