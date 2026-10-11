@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AuthListener } from "~/components/auth-listener";
 import { Navbar } from "~/components/navbar";
+import { SiteFooter } from "~/components/site-footer";
 import { ThemeProvider } from "./theme-provider";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           <AuthListener />
           <Navbar />
           {children}
+          <SiteFooter />
         </ThemeProvider>
       </body>
     </html>

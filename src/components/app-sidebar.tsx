@@ -1,14 +1,9 @@
 "use client";
 
-import { CircleHelp, Clock, Heart, Home, MapPin, User } from "lucide-react";
+import { Clock, Heart, Home, MapPin, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 
 const NAV_ITEMS = [
@@ -47,27 +42,6 @@ export function AppSidebar() {
           </Button>
         );
       })}
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" className="justify-start gap-2">
-            <CircleHelp className="size-4" />
-            Help
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="w-64">
-          <p className="text-sm text-muted-foreground">
-            If you need help or have any questions, email{" "}
-            <a
-              href="mailto:unitefencers@gmail.com"
-              className="font-medium text-foreground underline underline-offset-2"
-            >
-              unitefencers@gmail.com
-            </a>
-            .
-          </p>
-        </PopoverContent>
-      </Popover>
     </aside>
   );
 }
