@@ -12,7 +12,7 @@ export function StatCardRow({ stats }: { stats: TripStats }) {
         tone="sky"
       />
       <StatCard
-        label="Fits your free day"
+        label="Fit your free day"
         value={stats.fitsFreeDay}
         icon={CalendarCheck}
         tone="emerald"

@@ -54,7 +54,9 @@ export function DashboardHero({
             ) : null}
           </div>
         </div>
-        <div className="flex items-center gap-2 text-foreground">{actions}</div>
+        <div className="flex items-center gap-2 text-white [&_select]:font-semibold [&_select]:text-white [&_option]:text-navy">
+          {actions}
+        </div>
       </div>
     </section>
   );
