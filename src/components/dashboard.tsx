@@ -80,8 +80,8 @@ const BENEFITS = [
 
 const BENEFIT_STYLES = {
   sky: "bg-tone-sky/10 border-tone-sky/30 [&_span]:bg-tone-sky",
-  emerald: "bg-tone-emerald/10 border-tone-emerald/30 [&_span]:bg-tone-emerald",
-  violet: "bg-tone-violet/10 border-tone-violet/30 [&_span]:bg-tone-violet",
+  emerald: "bg-navy/10 border-navy/30 [&_span]:bg-navy",
+  violet: "bg-brand/10 border-brand/30 [&_span]:bg-brand",
 } as const;
 
 function EmptyNote({

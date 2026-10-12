@@ -26,8 +26,8 @@ const steps = [
     icon: Search,
     title: "Browse opportunities",
     description: "Pick a time that fits your schedule.",
-    card: "border-tone-violet/30 bg-tone-violet/10",
-    chip: "bg-tone-violet",
+    card: "border-navy/30 bg-navy/10",
+    chip: "bg-navy",
   },
   {
     icon: Heart,
@@ -47,12 +47,12 @@ const highlights = [
   {
     icon: CalendarCheck,
     label: "Fits around your bouts",
-    style: "border-tone-emerald/30 bg-tone-emerald/10 text-tone-emerald",
+    style: "border-navy/30 bg-navy/10 text-navy",
   },
   {
     icon: Clock,
     label: "Track your service hours",
-    style: "border-tone-amber/30 bg-tone-amber/10 text-tone-amber",
+    style: "border-brand/30 bg-brand/10 text-brand",
   },
 ];
 
@@ -87,14 +87,14 @@ export function MarketingPage() {
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url(/images/hero-volunteers.webp)" }}
+              style={{ backgroundImage: "url(/images/hero-food-service.webp)" }}
             />
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-linear-to-r from-navy/90 via-navy/70 to-navy/40"
             />
-            <div className="relative flex max-w-2xl flex-col items-center gap-6 px-6 py-16 text-center text-navy-foreground sm:items-start sm:px-12 sm:py-28 sm:text-left">
-              <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-6xl">
+            <div className="relative flex max-w-2xl flex-col items-center gap-4 px-6 py-8 text-center text-navy-foreground sm:items-start sm:px-10 sm:py-12 sm:text-left">
+              <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-5xl">
                 Turn Downtime Into{" "}
                 <span className="text-tone-amber">Impact.</span>
               </h1>
