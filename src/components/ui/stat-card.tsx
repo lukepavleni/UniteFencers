@@ -9,28 +9,28 @@ const TONE_STYLES: Record<
   { card: string; chip: string; value: string }
 > = {
   sky: {
-    card: "border-tone-sky/30 bg-tone-sky/10",
+    card: "border-tone-sky/50 bg-tone-sky/15",
     chip: "bg-tone-sky text-white",
     value: "text-tone-sky",
   },
   emerald: {
-    card: "border-tone-emerald/30 bg-tone-emerald/10",
-    chip: "bg-tone-emerald text-white",
-    value: "text-tone-emerald",
+    card: "border-navy/40 bg-[oklch(0.9_0.05_258)]",
+    chip: "bg-navy text-white",
+    value: "text-navy",
   },
   amber: {
-    card: "border-tone-amber/30 bg-tone-amber/10",
-    chip: "bg-tone-amber text-white",
-    value: "text-tone-amber",
+    card: "border-brand/50 bg-brand/15",
+    chip: "bg-brand text-white",
+    value: "text-brand",
   },
   violet: {
-    card: "border-tone-violet/30 bg-tone-violet/10",
-    chip: "bg-tone-violet text-white",
-    value: "text-tone-violet",
+    card: "border-[oklch(0.35_0_0)]/40 bg-[oklch(0.93_0_0)]",
+    chip: "bg-[oklch(0.35_0_0)] text-white",
+    value: "text-[oklch(0.35_0_0)]",
   },
   brand: {
-    card: "border-brand/30 bg-brand/10",
-    chip: "bg-brand text-brand-foreground",
+    card: "border-brand/50 bg-brand/15",
+    chip: "bg-brand text-white",
     value: "text-brand",
   },
 };

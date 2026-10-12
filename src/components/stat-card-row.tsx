@@ -15,19 +15,19 @@ export function StatCardRow({ stats }: { stats: TripStats }) {
         label="Fit your free day"
         value={stats.fitsFreeDay}
         icon={CalendarCheck}
-        tone="emerald"
+        tone="amber"
       />
       <StatCard
         label="Logged hours"
         value={stats.loggedHours}
         icon={Clock}
-        tone="violet"
+        tone="emerald"
       />
       <StatCard
         label="Pending confirmations"
         value={stats.pendingConfirmations}
         icon={Hourglass}
-        tone="amber"
+        tone="violet"
       />
     </div>
   );
