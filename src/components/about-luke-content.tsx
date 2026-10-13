@@ -1,12 +1,5 @@
-import { CalendarDays, MapPin, Search, UserRound, Zap } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { PageHeader } from "~/components/page-header";
-
-const STEPS = [
-  { icon: MapPin, label: "Choose your event", style: "bg-tone-sky" },
-  { icon: CalendarDays, label: "Select your dates", style: "bg-tone-violet" },
-  { icon: Search, label: "Find an opportunity", style: "bg-tone-emerald" },
-  { icon: Zap, label: "Sign up", style: "bg-brand" },
-];
 
 export function AboutLukeContent() {
   return (
@@ -14,55 +7,69 @@ export function AboutLukeContent() {
       <PageHeader
         icon={UserRound}
         title="Meet Luke"
-        description="Fencer and creator of Unite Fencers"
+        description="Competitive Fencer | Founder & Developer of UniteFencers"
       />
 
       <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
         <p>
-          Luke is a fencer and the creator of Unite Fencers. Through his
-          involvement in fencing, he has seen how much time and effort goes into
-          making tournaments and national events happen, and how important
-          volunteers are to the sport.
+          Luke is a nationally ranked saber fencer who combined his passion for
+          fencing, technology, and community service to create UniteFencers.
         </p>
         <p>
-          He created Unite Fencers to make it easier for fencers and families to
-          find volunteer opportunities at the events they are already attending.
-          The idea is simple:
+          After years of traveling across the country for national competitions
+          and volunteering in different cities, Luke recognized an opportunity
+          to make community service more accessible to fellow fencers.
         </p>
-
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {STEPS.map((step, index) => (
-            <div
-              key={step.label}
-              className="flex items-center gap-3 rounded-xl border border-border bg-muted/50 p-3"
-            >
-              <span
-                className={`flex size-9 shrink-0 items-center justify-center rounded-lg text-white shadow-sm ${step.style}`}
-              >
-                <step.icon className="size-4" />
-              </span>
-              <span className="text-sm font-semibold">
-                {index + 1}. {step.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
         <p>
-          Luke wanted to create something practical that could help connect the
-          fencing community and make it easier for people to give back to the
-          sport.
+          While volunteer opportunities existed in many tournament host cities,
+          finding them often meant searching multiple websites, contacting
+          organizations, and coordinating schedules around competitions.
+        </p>
+        <p className="rounded-xl border-l-4 border-l-brand bg-brand/10 p-4 text-lg font-semibold">
+          He believed there had to be a better way.
+        </p>
+        <p>
+          Inspired by his own experiences, Luke designed and developed
+          UniteFencers, a platform that uses technology to automatically
+          discover and organize volunteer opportunities near national fencing
+          tournaments.
+        </p>
+        <p>
+          The platform allows fencers to find their upcoming competitions,
+          explore nearby service opportunities, register directly with local
+          organizations, and maintain a personal record of their volunteer
+          hours.
+        </p>
+        <p>
+          What began as an idea to simplify volunteering became a way to connect
+          athletes with communities across the country.
+        </p>
+        <p>
+          Luke’s goal is to make community service a natural part of the
+          competitive fencing experience, encouraging more athletes to give back
+          wherever they travel.
         </p>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-brand/30 bg-brand/10 p-6 shadow-sm sm:p-8">
+      <div className="flex flex-col gap-4 rounded-2xl border border-navy/30 bg-navy/10 p-6 shadow-sm sm:p-8">
+        <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
+          <span className="h-6 w-1.5 rounded-full bg-navy" />
+          Beyond the Strip
+        </h2>
         <p>
-          For Luke, fencing is about more than competing. It is also about being
-          part of a community and helping make the sport better for everyone.
+          For Luke, fencing has always been about more than competition. It has
+          taught him discipline, perseverance, and the value of being part of a
+          community.
         </p>
-        <p className="text-lg font-semibold">
-          Unite Fencers is Luke's effort to use technology to solve a real need
-          within the sport he loves.
+        <p>
+          Creating UniteFencers allowed him to bring together his interests in
+          technology, problem-solving, and service to build something that could
+          benefit others.
+        </p>
+        <p className="font-semibold">
+          His vision is simple: to help fencers make an impact not only through
+          their achievements on the strip, but also through the difference they
+          make beyond it.
         </p>
       </div>
     </div>

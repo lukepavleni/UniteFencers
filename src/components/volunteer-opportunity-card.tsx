@@ -30,7 +30,7 @@ export function VolunteerOpportunityCard({
         </div>
         <div className="flex flex-wrap gap-2">
           {opportunity.duration ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-tone-violet/10 px-2.5 py-0.5 text-xs font-medium text-tone-violet">
+            <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-0.5 text-xs font-medium text-navy">
               <Clock className="size-3" />
               {opportunity.duration}
             </span>

@@ -160,7 +160,7 @@ export async function Dashboard({
             Plan your trip to find volunteer opportunities near the tournament.
           </p>
           {catalogCount ? (
-            <span className="rounded-full bg-tone-emerald/15 px-4 py-1.5 text-sm font-semibold text-tone-emerald">
+            <span className="rounded-full bg-navy/15 px-4 py-1.5 text-sm font-semibold text-navy">
               {catalogCount} volunteer{" "}
               {catalogCount === 1 ? "opportunity" : "opportunities"} waiting
             </span>
