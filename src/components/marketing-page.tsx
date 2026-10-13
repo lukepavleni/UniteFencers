@@ -46,12 +46,12 @@ const highlights = [
   },
   {
     icon: CalendarCheck,
-    label: "Fits around your bouts",
+    label: "Plan around days you compete",
     style: "border-navy/30 bg-navy/10 text-navy",
   },
   {
     icon: Clock,
-    label: "Track your service hours",
+    label: "Log your service hours",
     style: "border-brand/30 bg-brand/10 text-brand",
   },
 ];
@@ -139,17 +139,17 @@ export function MarketingPage() {
                     key={step.title}
                     className={`flex flex-col gap-3 rounded-xl border p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md ${step.card}`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div
-                        className={`flex size-12 items-center justify-center rounded-xl text-white shadow-sm ${step.chip}`}
-                      >
-                        <step.icon className="size-6" />
-                      </div>
-                      <span className="text-sm font-semibold text-muted-foreground">
-                        Step {index + 1}
-                      </span>
+                    <div
+                      className={`flex size-12 items-center justify-center rounded-xl text-white shadow-sm ${step.chip}`}
+                    >
+                      <step.icon className="size-6" />
                     </div>
-                    <h3 className="text-lg font-semibold">{step.title}</h3>
+                    <h3 className="text-lg font-semibold">
+                      <span className="text-muted-foreground">
+                        Step {index + 1} -
+                      </span>{" "}
+                      {step.title}
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       {step.description}
                     </p>

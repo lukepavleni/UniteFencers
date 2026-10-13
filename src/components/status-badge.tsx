@@ -13,15 +13,15 @@ const STATUS_LABELS: Record<VolunteerPlanStatus, string> = {
 export const STATUS_ACCENT: Record<VolunteerPlanStatus, string> = {
   saved: "border-l-border",
   registered: "border-l-tone-sky",
-  completed: "border-l-tone-violet",
-  verified: "border-l-tone-emerald",
+  completed: "border-l-navy",
+  verified: "border-l-[oklch(0.35_0_0)]",
   missed: "border-l-destructive",
 };
 
 export function StatusBadge({ status }: { status: VolunteerPlanStatus }) {
   if (status === "verified") {
     return (
-      <Badge className="bg-tone-emerald text-white">
+      <Badge className="bg-[oklch(0.35_0_0)] text-white">
         {STATUS_LABELS[status]}
       </Badge>
     );
@@ -35,10 +35,7 @@ export function StatusBadge({ status }: { status: VolunteerPlanStatus }) {
 
   if (status === "completed") {
     return (
-      <Badge
-        variant="outline"
-        className="border-tone-violet/40 bg-tone-violet/10 text-tone-violet"
-      >
+      <Badge variant="outline" className="border-navy/40 bg-navy/10 text-navy">
         {STATUS_LABELS[status]}
       </Badge>
     );

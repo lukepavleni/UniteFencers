@@ -49,8 +49,8 @@ export function TripCard({
             </p>
             <p className="font-semibold">{formatDate(trip.arrival_date)}</p>
           </div>
-          <div className="rounded-xl border border-tone-violet/30 bg-tone-violet/10 p-3">
-            <p className="flex items-center gap-1.5 text-xs font-medium text-tone-violet">
+          <div className="rounded-xl border border-navy/30 bg-navy/10 p-3">
+            <p className="flex items-center gap-1.5 text-xs font-medium text-navy">
               <CalendarDays className="size-3.5" />
               Departure
             </p>
